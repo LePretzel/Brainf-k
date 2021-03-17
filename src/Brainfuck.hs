@@ -1,5 +1,5 @@
 module Brainfuck
-    ( Program,
+    ( Program(..),
       startProgram,
       Command(..),
       evaluate,
@@ -8,16 +8,16 @@ module Brainfuck
 import Data.Map(Map)
 import qualified Data.Map as Map
 
-type Program = (Int, Map Int Int)
+newtype Program = Program (Int, Map Int Int) deriving (Show, Eq)
 
 startProgram :: Program
-startProgram = (0, Map.fromList [(x, 0) | x <- [0..9]])
+startProgram = Program (0, Map.fromList [(x, 0) | x <- [0..9]])
 
 data Command = Increment | Decrement | ShiftLeft | ShiftRight |
                Output | Input | OpenLoop | CloseLoop
 
-evaluate :: Command -> Program -> Program
-evaluate Increment (index, array) = (index, Map.insertWith (+) index 1 array)
-evaluate Decrement (index, array) = (index, Map.insertWith (-) index 1 array)
-evaluate ShiftLeft (index, array) = (index - 1, array)
-evaluate ShiftRight (index, array) = (index + 1, array)
+evaluate :: Command -> Program -> IO Program
+evaluate Increment (Program (index, array)) = return (Program (index, Map.insertWith (+) index 1 array))
+evaluate Decrement (Program (index, array)) = return (Program (index, Map.insertWith (-) index 1 array))
+evaluate ShiftLeft (Program (index, array)) = return (Program (index - 1, array))
+evaluate ShiftRight (Program (index, array)) = return (Program (index + 1, array))
