@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5270cdc8deac5e09581b9b596629adb9c7278765dcd9989245d53ecb69f2632c
+-- hash: 88ec9012ec517ec20a77e8f17bb8ddb26df9322521dc659e627a3350669897fc
 
 name:           brainfuck
 version:        0.1.0.0
@@ -34,6 +34,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , bytestring
     , containers
   default-language: Haskell2010
 
