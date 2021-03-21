@@ -8,10 +8,10 @@ module Brainfuck
 import Data.Map(Map)
 import qualified Data.Map as Map
 
-newtype Program = Program (Int, Map Int Int) deriving (Show, Eq)
+data Program = Program {instruction :: Int, index :: Int, array :: Map Int Int } deriving (Show, Eq)
 
 startProgram :: Program
-startProgram = Program (0, Map.fromList [(x, 0) | x <- [0..9]])
+startProgram = Program {instruction = 0, index = 0, array = Map.fromList [(x, 0) | x <- [0..9]]}
 
 data Command = Increment | Decrement | ShiftLeft | ShiftRight |
                Output | Input | OpenLoop | CloseLoop
@@ -24,12 +24,12 @@ getIntInput = do
                   
 
 evaluate :: Command -> Program -> IO Program
-evaluate Increment (Program (index, array)) = return (Program (index, Map.insertWith (+) index 1 array))
-evaluate Decrement (Program (index, array)) = return (Program (index, Map.insertWith (+) index (-1) array))
-evaluate ShiftLeft (Program (index, array)) = return (Program (index - 1, array))
-evaluate ShiftRight (Program (index, array)) = return (Program (index + 1, array))
-evaluate Output (Program (index, array)) = do (putChar . toEnum) $ (Map.!) array index
-                                              return (Program (index, array)) 
-evaluate Input (Program (index, array)) = do a <- getIntInput
-                                             return (Program (index, Map.insert index a array))
+evaluate Increment program = return program { array = Map.insertWith (+) (index program) 1 (array program) }
+evaluate Decrement program = return program { array = Map.insertWith (+) (index program) (-1) (array program) }
+evaluate ShiftLeft program = return program { index = index program - 1 }
+evaluate ShiftRight program = return program { index = index program + 1 } 
+evaluate Output program = do (putChar . toEnum) $ (Map.!) (array program) (index program)
+                             return program
+evaluate Input program = do a <- getIntInput
+                            return program { array = Map.insert (index program) a (array program) }
                                              
