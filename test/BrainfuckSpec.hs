@@ -13,12 +13,12 @@ spec = describe "evaluate" $ do
         arr ! ind `shouldBe` 1
 
     it "decreases the value stored at the index when Decrement is used" $ do
-        Program {array=arr, index=ind} <- evaluate Decrement $ Program 0 1 (Data.Map.fromList [(x, 2) | x <- [0..9]])
+        Program {array=arr, index=ind} <- evaluate Decrement $ Program 0 [] 1 (Data.Map.fromList [(x, 2) | x <- [0..9]])
         arr ! ind `shouldBe` 1
 
     it "increments the pointer when ShiftRight is used" $ do
         result <- evaluate ShiftRight startProgram
-        result `shouldBe` Program 0 1 (Data.Map.fromList [(x, 0) | x <- [0..9]])
+        result `shouldBe` Program 0 [] 1 (Data.Map.fromList [(x, 0) | x <- [0..9]])
 
     it "decrements the pointer when ShiftLeft is used" $ do
         a <- evaluate ShiftRight startProgram
