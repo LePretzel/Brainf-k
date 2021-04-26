@@ -56,3 +56,18 @@ execute com program = do
     if instruction program < Map.size com
         then execute com newProgram
         else return program
+
+
+tokenizeChar :: Char -> Command
+tokenizeChar c | c == '+' = Increment
+               | c == '-' = Decrement
+               | c == '>' = ShiftRight
+               | c == '<' = ShiftLeft
+               | c == ',' = Input
+               | c == '.' = Output
+               | c == '[' = OpenLoop
+               | c == ']' = CloseLoop
+               | otherwise = None
+
+getTokens :: [Char] -> [Command]
+getTokens = map tokenizeChar

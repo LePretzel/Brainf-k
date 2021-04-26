@@ -27,6 +27,7 @@ library:
   dependencies:
   - containers
   - bytestring
+  - text
 
 executables:
   brainfuck-exe:
