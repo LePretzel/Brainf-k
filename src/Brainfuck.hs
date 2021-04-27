@@ -1,15 +1,19 @@
 module Brainfuck
-    ( Program(..),
+    ( Arr,
+      Program(..),
       startProgram,
       Command(..),
       evaluate,
       execute,
+      runBrainfuck,
     ) where
 
-import Control.Monad(when)
-import Data.Map(Map)
+import Control.Applicative ( Applicative(liftA2), ZipList (ZipList, getZipList) )
+import Control.Monad (when)
+import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.Text as T
+import System.IO ( openFile, IOMode(ReadMode), hGetContents )
 
 type Arr = Map Int
 
@@ -69,5 +73,14 @@ tokenizeChar c | c == '+' = Increment
                | c == ']' = CloseLoop
                | otherwise = None
 
-getTokens :: [Char] -> [Command]
-getTokens = map tokenizeChar
+getTokens :: [Char] -> Arr Command
+getTokens c = let tokens = map tokenizeChar c
+                  tups   =  getZipList $ (,) <$> ZipList [0..] <*> ZipList tokens
+              in  Map.fromList tups
+
+runBrainfuck :: String -> IO ()
+runBrainfuck source = do 
+    handle <- openFile source ReadMode
+    contents <- hGetContents handle
+    execute (getTokens contents) startProgram
+    return ()
