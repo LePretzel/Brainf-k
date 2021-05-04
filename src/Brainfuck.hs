@@ -13,7 +13,7 @@ import Control.Monad (when)
 import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.Text as T
-import System.IO ( openFile, IOMode(ReadMode), hGetContents )
+import System.IO ( openFile, IOMode(ReadMode), hGetContents, hClose )
 
 type Arr = Map Int
 
@@ -23,7 +23,7 @@ startProgram :: Program
 startProgram = Program {instruction = 0, loopIndices = [], index = 0, array = Map.fromList [(x, 0) | x <- [0..9]]}
 
 data Command = Increment | Decrement | ShiftLeft | ShiftRight |
-               Output | Input | OpenLoop | CloseLoop | None
+               Output | Input | OpenLoop | CloseLoop | None deriving (Show)
 
 getIntInput :: IO Int 
 getIntInput = do 
@@ -55,10 +55,11 @@ evaluate None program = return program
 
 
 execute :: Arr Command -> Program -> IO Program 
-execute com program = do
-    newProgram <- evaluate (com Map.! instruction program) program
+execute com program = 
     if instruction program < Map.size com
-        then execute com newProgram
+        then do 
+            newProgram <- evaluate (com Map.! instruction program) program
+            execute com newProgram {instruction = instruction program + 1}
         else return program
 
 
@@ -80,7 +81,6 @@ getTokens c = let tokens = map tokenizeChar c
 
 runBrainfuck :: String -> IO ()
 runBrainfuck source = do 
-    handle <- openFile source ReadMode
-    contents <- hGetContents handle
+    contents <- readFile source
     execute (getTokens contents) startProgram
     return ()

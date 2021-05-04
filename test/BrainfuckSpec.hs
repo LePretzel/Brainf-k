@@ -26,6 +26,10 @@ spec = do
             result <- evaluate ShiftLeft a
             result `shouldBe` startProgram
 
+    describe "runBrainfuck" $ do
+        it ""
+
+
     -- describe "tokenizeChar" $ do -- Might not need this because I might not export tokenizeChar
     --     it "returns the appropriate Command when fed a character" $ do
     --         tokenizeChar '+' `shouldBe` Increment
