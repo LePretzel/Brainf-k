@@ -1,1 +1,1 @@
-# Toy compiler for a certain esoteric programming language
+# Toy compiler for the esoteric programming language Brainf*ck
