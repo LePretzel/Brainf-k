@@ -1,1 +1,1 @@
-# Toy compiler for the esoteric programming language Brainfrick
+# Compiler for the esoteric programming language Brainf__k. Made mainly as an exercise for learning Haskell.
